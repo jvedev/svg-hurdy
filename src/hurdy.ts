@@ -3,12 +3,13 @@ import Svg from './sgvTools/Sgv';
 const SCALE_CONST = 17.817 // Do not change this
 const MIN_KEY_GAB = 2;
 const MIN_TANGENT_GAB = 4;
-const KEY_GAB = .1;
+const MIN_KEY_WIDTH = 12.5;
+const KEY_GAB = 1;
 type IKey = 'C' | 'C#' | 'D' | 'D#' | 'E' | 'F' | 'F#' | 'G' | 'G#' | 'A' | 'A#' | 'B';
 
 let CI = 0
 
-interface IHurdySpecs {
+export interface IHurdySpecs {
     root: IKey
     scale: number,
     keys: number,
@@ -70,65 +71,97 @@ export class Hurdy {
         })
     }
 
+    getPrevKeySameRow(key: IKeyDef): IKeyDef | null {
+        let prev = key;
+
+        while (prev.previous) {
+            if (key.sharp == prev.previous.sharp) {
+                return prev.previous
+            }
+            prev = prev.previous;
+        }
+        return null;
+    }
+
+    getNextKeySameRow(key: IKeyDef): IKeyDef | null {
+        let next = key;
+
+        while (next.next) {
+            if (key.sharp == next.next.sharp) {
+                return next.next
+            }
+            next = next.next;
+        }
+        return null;
+    }
+
+    setKeyR(key: IKeyDef): void {
+        // get the next key in this row
+        const next = this.getNextKeySameRow(key)
+        if (next) {
+
+            const width = next.c.x - key.c.x
+            key.r = key.c.x + (width / 2); // in between the two keys
+            return;
+        }
+        //last key on this row
+        key.r = key.c.x + key.w;
+    }
+
+    setKeyL(key: IKeyDef): void {
+
+        // get the next key in this row
+        const prev = this.getPrevKeySameRow(key)
+        if (prev) {
+            key.l = prev.r
+            return
+        }
+        //last key on this row
+        key.l = key.c.x - 20;
+    }
+
+
+
+    setMinKeyWidth() {
+        this.keys.forEach(key => {
+            const width = key.r - key.l;
+            if (width > MIN_KEY_WIDTH) return;
+            const shift = MIN_KEY_WIDTH - width;
+            key.r += shift // move right side of the key
+            debugger;
+            let left = key.next;
+            while (left) {
+                if (key.sharp == left.sharp) {
+                    left.l += shift;
+                    left.r += shift;
+                }else{
+                    left.l
+                }
+
+                left = left.next;
+            }
+        })
+
+    }
 
     getKeys() {
-        this.drawing.offSet = {x: 0, y: 90}
+        this.drawing.offSet = {x: 0, y: 15}
+        this.keys.forEach(key => this.setKeyR(key));
+        this.keys.forEach(key => this.setKeyL(key));
+        this.setMinKeyWidth();
 
         this.keys.forEach((key, index) => {
-            let l = key.c.x - (key.w / 2)
-            let r = l + key.w;
-            let y = key.sharp ? 0 : 20;
-            debugger;
-
-            if (key.previous) { //same row
-                l = (key.previous.sharp == key.sharp) ? key.previous.r : key.previous.c.x
-
-                if (key.previous.sharp == key.sharp) { //same row
-                    l = key.previous.l
-                } else {
-                    debugger;
-                    if (key.previous.sharp == key.previous?.previous?.sharp) {
-                        //top row next to bottom keys
-                        l = key.previous.previous.c.x - ((key.previous.previous.c.x - key.previous.c.x) / 2);
-                    } else {
-                        l = key.previous.c.x;
-                    }
-                }
-
-
-            }
-
-            if (key.next) {
-                if (key.next.sharp == key.sharp) { //same row
-                    r = key.next.l
-                } else {
-                    if (key.next.sharp == key.next?.next?.sharp) {
-                        //top row next to bottom keys
-                        r = key.next.c.x + ((key.next.next.c.x - key.next.c.x) / 2);
-                    } else {
-                        r = key.next.c.x;
-                    }
-                }
-            }
-
-            if (!this.isSharp(index)) {
-                y += 5 * index;
-
-                const mode = ['cut','engrave', 'construction','cut','engrave', 'construction','cut','engrave', 'construction','cut','engrave', 'construction','cut','engrave', 'construction','cut','engrave', 'construction','cut','engrave', 'construction'][CI++]
-                //@ts-ignore
-                this.drawing.mode = mode;
-                console.log(mode, index, Math.round(l) , key);
-            }
+            let y = (key.sharp) ? 0 : 15;
 
             this.drawing.rect({
-                x1: l + KEY_GAB / 2,
-                x2: r - KEY_GAB / 2,
+                x1: key.l + KEY_GAB / 2,
+                x2: key.r - KEY_GAB / 2,
                 y1: y,
                 y2: y + 5
             })
-
-
+            console.log(index, this.keyBoard[index], key.r - key.l)
         })
+
     }
 
     drawUpperKeys(): void {
