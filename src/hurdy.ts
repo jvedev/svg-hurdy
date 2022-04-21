@@ -5,7 +5,7 @@ const MIN_KEY_GAB = 2;
 const MIN_TANGENT_GAB = 4;
 const MIN_KEY_WIDTH = 12.5;
 const KEY_GAB = 1;
-type IKey = 'C' | 'C#' | 'D' | 'D#' | 'E' | 'F' | 'F#' | 'G' | 'G#' | 'A' | 'A#' | 'B';
+export type IKey = 'C' | 'C#' | 'D' | 'D#' | 'E' | 'F' | 'F#' | 'G' | 'G#' | 'A' | 'A#' | 'B';
 
 let CI = 0
 
