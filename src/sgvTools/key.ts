@@ -1,6 +1,6 @@
 import {IHurdySpecs} from "../hurdy";
 import createScale from "./scale";
-
+import checkGabs from "./keyGabs"
 export interface IShaft {
     c: { x: number; y: number };
     w: number;
@@ -45,11 +45,15 @@ export default class Key {
     private readonly specs: IHurdySpecs;
 
     static create(specs: IHurdySpecs) {
-        createScale(specs)
+        debugger;
+        createScale(specs);
+        debugger;
+
+        checkGabs(specs);
     }
 
 
-    setInitialShaftDimentions(){
+    setInitialShaftDimensions(){
         const half = this.specs.keyLegWidth/2
         this.shaft.c.x = this.fromNut;
         this.shaft.w = this.specs.keyLegWidth;
@@ -64,13 +68,16 @@ export default class Key {
         this.specs = specs
         this.fromNut = fromNut;
         this.note = note
-        this.setInitialShaftDimentions();
+        this.setInitialShaftDimensions();
 
 
         //setting up linked links
         let previous = Key.keys[Key.keys.length - 1]
-        this.previous = previous;
-        previous.next = this;
+        if(previous){
+            this.previous = previous;
+            previous.next = this;
+        }
+
 
         Key.keys.push(this);
         this.half = note.includes('#')
@@ -81,7 +88,10 @@ export default class Key {
             previous = Key.wholeNotes[Key.halfNotes.length - 1];
             Key.wholeNotes.push(this)
         }
-        this.row.previous = previous
-        previous.row.next = this;
+        if(previous){
+            this.row.previous = previous
+            previous.row.next = this;
+        }
+
     }
 }

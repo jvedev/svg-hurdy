@@ -38,7 +38,7 @@ interface IKeyDef {
 
 export class Hurdy {
     private drawing: Svg;
-    private keys: IKeyDef[] = [];
+    public keys: IKeyDef[] = [];
     private keyBoard: IKey[] = [];
     private specs: IHurdySpecs;
 
@@ -67,6 +67,7 @@ export class Hurdy {
         })
         this.drawing.mode = 'cut';
         this.keys.forEach(key => {
+          //  console.log(key.c.x, key.c.x-key.w/2, key.c.x + key.w/2)
             this.drawing.rect(key)
         })
     }
@@ -128,7 +129,6 @@ export class Hurdy {
             if (width > MIN_KEY_WIDTH) return;
             const shift = MIN_KEY_WIDTH - width;
             key.r += shift // move right side of the key
-            debugger;
             let left = key.next;
             while (left) {
                 if (key.sharp == left.sharp) {
@@ -159,7 +159,7 @@ export class Hurdy {
                 y1: y,
                 y2: y + 5
             })
-            console.log(index, this.keyBoard[index], key.r - key.l)
+            // console.log(index, this.keyBoard[index], key.r - key.l)
         })
 
     }

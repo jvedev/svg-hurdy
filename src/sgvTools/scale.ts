@@ -9,12 +9,16 @@ export default (specs:IHurdySpecs)=>{
     const retKeys:Key[] = []
 
     setKeyBoard(specs);
-    let fromNut = specs.scale
+    let current = specs.scale
     for (let i = 0; i < specs.keys; i++) {
-        fromNut = fromNut - (fromNut / SCALE_CONST)
+        current = current - (current / SCALE_CONST)
+        const fromNut = specs.scale - current + specs.topNutSpace
         const note = keyBoard[i]
         new Key(specs, note, fromNut);
     }
+     // Key.keys.forEach(key=>{
+     //     console.log(key.fromNut, key.shaft.l, key.shaft.r)
+     // })
 }
 
 const setKeyBoard = (specs:IHurdySpecs) => {
