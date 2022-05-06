@@ -1,8 +1,8 @@
 import Sgv from './sgvTools/Sgv'
-import Key from './sgvTools/key'
+import Key from './key'
 import {Hurdy} from './hurdy'
 
-import scale from './sgvTools/scale'
+import scale from './scale'
 function main(placeHolder: HTMLElement | undefined) {
     if (!placeHolder) {
         return;
@@ -24,33 +24,11 @@ function main(placeHolder: HTMLElement | undefined) {
         keyLegWidth: 8,
         tangentBoxHeight: 60,
         tangentBoxWidth: 300,
-        topNutSpace: 10
+        topNutSpace: 10,
+        keySpecs:{lower:[],upper:[]}
 
     })
 
-    Key.create({
-        root: 'G',
-        scale: 345,
-        keys: 24,
-        bottomRow: 37,
-        topRow: 45,
-        keyLegHeight: 5,
-        keyLegWidth: 8,
-        tangentBoxHeight: 60,
-        tangentBoxWidth: 300,
-        topNutSpace: 10
-
-    })
-
-
-    for(let i=0;i<24;i++){
-       // if(h.keys[i].c.x != Key.keys[i].shaft.c.x){
-            console.log(i);
-            console.log('o', h.keys[i].c.x, h.keys[i].c.x - (h.keys[i].w /2));
-            console.log('n', Key.keys[i].shaft.c.x, Key.keys[i].shaft.r);
-       // }
-
-    }
 
 
 }

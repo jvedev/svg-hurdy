@@ -1,4 +1,4 @@
-import {IHurdySpecs, IKey} from "../hurdy";
+import {IHurdySpecs, IKey} from "./hurdy";
 import Key from "./key";
 
 const SCALE_CONST = 17.817 // Do not change this
@@ -11,14 +11,12 @@ export default (specs:IHurdySpecs)=>{
     setKeyBoard(specs);
     let current = specs.scale
     for (let i = 0; i < specs.keys; i++) {
+
         current = current - (current / SCALE_CONST)
         const fromNut = specs.scale - current + specs.topNutSpace
         const note = keyBoard[i]
-        new Key(specs, note, fromNut);
+        new Key(specs, note, fromNut, Math.ceil(i/12));
     }
-     // Key.keys.forEach(key=>{
-     //     console.log(key.fromNut, key.shaft.l, key.shaft.r)
-     // })
 }
 
 const setKeyBoard = (specs:IHurdySpecs) => {

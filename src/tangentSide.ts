@@ -1,4 +1,4 @@
-import {IHurdySpecs} from "../hurdy";
+import {IHurdySpecs} from "./hurdy";
 import Key, {IShaft} from "./key";
 
 const MIN_TANGENT_GAB = 4;
